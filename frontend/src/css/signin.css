@@ -1,0 +1,156 @@
+body {
+  background-color: #e3e7ec;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Container */
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+/* Form */
+.signin-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px;
+}
+
+/* Title */
+.signin-title {
+  color: #0056a2;
+  font-size: 30px;
+  margin-bottom: 1.5rem;
+}
+
+/* Subtitle */
+.signin-subtitle {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Input Fields */
+.signin-form-group {
+  margin-bottom: 1rem;
+}
+
+.signin-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.signin-input:focus {
+  border-color: #0056a2;
+  outline: none;
+}
+
+/* Options */
+.signin-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.signin-remember {
+  font-size: 0.9rem;
+  color: #000000;
+}
+
+.signin-forgot-password {
+  font-size: 0.9rem;
+  color: #f56c77;
+  text-decoration: none;
+}
+
+.signin-forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Submit Button */
+.signin-btn {
+  width: 40%;
+  padding: 0.75rem;
+  background-color: #50b748;
+  color: #fff;
+  border: 1px solid #50b748;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 auto; 
+  display: block;
+}
+
+.signin-btn:hover {
+  background-color: #fff;
+  color: #000000;
+  border: 1px solid #50b748;
+}
+
+/* Signup Link */
+.signin-signup-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: #555;
+}
+
+.signin-signup-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.signin-signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Divider */
+.signin-divider {
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #9b9b9b;
+}
+
+/* Social Buttons */
+.signin-social-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.signin-btn-facebook,
+.signin-btn-google {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.signin-btn-facebook {
+  background-color: #3b5998;
+}
+
+.signin-btn-facebook:hover {
+  background-color: #2d4373;
+}
+
+.signin-btn-google {
+  background-color: #db4437;
+}
+
+.signin-btn-google:hover {
+  background-color: #c23321;
+}
