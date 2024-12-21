@@ -1,24 +1,49 @@
-from flask import Flask, jsonify
+# from flask import Flask, jsonify
+# from flask_pymongo import PyMongo
+# from pymongo.errors import ConnectionFailure
+
+# # Initialize the Flask application
+# app = Flask(__name__)
+
+# # Load configuration from config.py
+# app.config.from_object('config.Config')
+
+# # Initialize PyMongo with the Flask app
+# mongo = PyMongo(app)
+
+# @app.route('/ping_db')
+# def ping_db():
+#     try:
+#         # The ping command checks the connection to the database
+#         mongo.cx.admin.command('ping')
+#         return jsonify({"status": "success", "message": "Database connection is healthy."}), 200
+#     except ConnectionFailure:
+#         return jsonify({"status": "fail", "message": "Database connection failed."}), 500
+
+# if __name__ == '__main__':
+#     app.run(debug=True)
+
+from flask import Flask
 from flask_pymongo import PyMongo
-from pymongo.errors import ConnectionFailure
+from flask_cors import CORS
+from routes.auth_routes import init_user_routes
+from config import Config
 
-# Initialize the Flask application
+# Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
-# Load configuration from config.py
-app.config.from_object('config.Config')
-
-# Initialize PyMongo with the Flask app
+# Configure MongoDB
+app.config.from_object(Config)
 mongo = PyMongo(app)
 
-@app.route('/ping_db')
-def ping_db():
-    try:
-        # The ping command checks the connection to the database
-        mongo.cx.admin.command('ping')
-        return jsonify({"status": "success", "message": "Database connection is healthy."}), 200
-    except ConnectionFailure:
-        return jsonify({"status": "fail", "message": "Database connection failed."}), 500
+# Initialize routes
+auth_routes = init_user_routes(mongo.db)
+app.register_blueprint(auth_routes, url_prefix="/auth")
 
-if __name__ == '__main__':
+@app.route("/")
+def home():
+    return {"message": "API is running"}, 200
+
+if __name__ == "__main__":
     app.run(debug=True)
