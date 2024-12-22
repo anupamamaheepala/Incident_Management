@@ -1,47 +1,92 @@
-import React, { useState } from 'react';
-import { Divider, Typography } from '@mui/material';
-import '../css/signup.css';
-import Footer from '../components/Footer';
-import Header from '../components/Header';
-
+import React, { useState } from "react";
+import { Divider, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import "../css/signup.css";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
     terms: false,
   });
 
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setErrors({});
+    setSuccessMessage("");
+
     const newErrors = {};
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Passwords do not match",
+      });
+      return;
+    }
+
+    if (!formData.terms) {
+      newErrors.terms = "You must agree to the terms and conditions";
     }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-    } else {
-      setErrors({});
-      // Proceed with form submission logic
+      return;
     }
-    // Add form validation and submission logic here
+
+    try {
+      const response = await axios.post("http://localhost:5000/auth/signup", {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+      });
+      Swal.fire({
+        position: "top",
+        icon: "success",
+        showConfirmButton: false,
+        title: response.data.message,
+        timer: 1500
+      });
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+        terms: false,
+      });
+      navigate("/signin");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error.response?.data?.message || "Signup failed",
+      });
+    }
   };
 
   return (
@@ -51,7 +96,9 @@ const Signup = () => {
         <form className="signup-form" onSubmit={handleSubmit}>
           <h2 className="signup-title">Sign up</h2>
           <p className="signup-subtitle">Enter your credentials to continue</p>
-          
+          {successMessage && <p className="success-message">{successMessage}</p>}
+          {errors.server && <p className="error-message">{errors.server}</p>}
+
           <div className="signup-form-row">
             <div className="signup-form-group">
               <input
@@ -112,7 +159,6 @@ const Signup = () => {
               onChange={handleChange}
               required
             />
-            {errors.password && <span className="signup-error">{errors.password}</span>}
           </div>
           <div className="signup-form-group">
             <input
@@ -128,6 +174,7 @@ const Signup = () => {
               <span className="signup-error">{errors.confirmPassword}</span>
             )}
           </div>
+
           <div className="signup-form-group terms">
             <input
               type="checkbox"
@@ -137,33 +184,37 @@ const Signup = () => {
               onChange={handleChange}
               required
             />
-            <label htmlFor="terms">I agree to all the <span style={{ color: '#ff8682' }}>Terms</span> and <span style={{ color: '#ff8682' }}>Privacy Policies</span></label>
+            <label htmlFor="terms">
+              I agree to all the <span style={{ color: "#ff8682" }}>Terms</span> and{" "}
+              <span style={{ color: "#ff8682" }}>Privacy Policies</span>
+            </label>
+            {errors.terms && <span className="signup-error">{errors.terms}</span>}
           </div>
-          
+
           <button type="submit" className="signup-btn-create-account">
             Create Account
           </button>
-          
+
           <p className="signup-signin-link">
             Already have an account? <a href="/signin">Login</a>
           </p>
 
           <div className="signup-divider">
-                        <Divider>
-                            <Typography variant="caption">
-                                Or Login With
-                            </Typography>
-                        </Divider>
-          </div>
+                         <Divider>
+                             <Typography variant="caption">
+                                 Or Login With
+                             </Typography>
+                         </Divider>
+           </div>
           
-          <div className="signup-social-buttons-con">
-            <button type="button" className="signup-btn-facebook-login">
-              Facebook Account
-            </button>
-            <button type="button" className="signup-btn-google-login">
-              Google Account
-            </button>
-          </div>          
+           <div className="signup-social-buttons-con">
+             <button type="button" className="signup-btn-facebook-login">
+               Facebook Account
+             </button>
+             <button type="button" className="signup-btn-google-login">
+               Google Account
+             </button>
+           </div>
         </form>
       </div>
       <Footer />
