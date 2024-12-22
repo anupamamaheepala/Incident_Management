@@ -33,7 +33,7 @@ function Signin() {
         password: formData.password,
       });
       Swal.fire({
-        position: "top-end",
+        position: "top",
         icon: "success",
         showConfirmButton: false,
         title: response.data.message,
@@ -84,6 +84,15 @@ function Signin() {
               required
               className="signin-input"
             />
+          </div>
+
+          <div className="signin-options">
+            <label className="signin-remember">
+              <input type="checkbox" /> Remember me
+            </label>
+            <a href="/forgot-password" className="signin-forgot-password">
+              Forgot Password
+            </a>
           </div>
 
           <button type="submit" className="signin-btn">

@@ -64,7 +64,7 @@ const Signup = () => {
         password: formData.password,
       });
       Swal.fire({
-        position: "top-end",
+        position: "top",
         icon: "success",
         showConfirmButton: false,
         title: response.data.message,
