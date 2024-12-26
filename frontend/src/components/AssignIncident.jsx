@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import DeclineIncident from "../components/DeclineIncident";
 
 // Set up the modal root
 Modal.setAppElement("#root");
 
-const CancelIncident = () => {
+const AssignIncident = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [isDeclineOpen, setIsDeclineOpen] = useState(false);
+  const openDeclineModal = () => setIsDeclineOpen(true);
+  const closeDeclineModal = () => setIsDeclineOpen(false);
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
-  const handleDecline = () => {
-    alert("Incident canceled!");
-    closeModal();
-  };
 
   return (
     <div>
       {/* Button to trigger the modal */}
       <button onClick={openModal} style={styles.button}>
-        Cancel Incident
+      Action
       </button>
 
       {/* Modal */}
@@ -31,7 +31,6 @@ const CancelIncident = () => {
           },
           content: {
             maxWidth: "400px",
-            height: "250px",
             margin: "auto",
             padding: "20px",
             borderRadius: "8px",
@@ -40,19 +39,14 @@ const CancelIncident = () => {
         }}
       >
         <div style={styles.modalContent}>
-          <div style={styles.icon}>
-            <span style={styles.alertIcon}>⚠️</span>
-          </div>
-          <h2 style={styles.header}>Cancel Incident</h2>
-          <p style={styles.text}>
-            Are you sure you want to cancel this Incident? This action cannot be undone.
-          </p>
+          <h2 style={styles.header}>Report Incident</h2>
           <div style={styles.buttons}>
-            <button onClick={closeModal} style={styles.cancelButton}>
-              Cancel
+            
+            <button onClick={openDeclineModal}>
+            <DeclineIncident isOpen = {isDeclineOpen} onclose = {closeDeclineModal} />
             </button>
-            <button onClick={handleDecline} style={styles.okButton}>
-              Ok
+            <button onClick={"closeModal"} style={styles.cancelButton}>
+              Assign
             </button>
           </div>
         </div>
@@ -64,7 +58,7 @@ const CancelIncident = () => {
 const styles = {
   button: {
     padding: "10px 20px",
-    backgroundColor: "#FF6347",
+    backgroundColor: "#4da8da",
     color: "#fff",
     border: "none",
     borderRadius: "5px",
@@ -97,14 +91,12 @@ const styles = {
     padding: "10px 20px",
     backgroundColor: "#f0f0f0",
     border: "1px solid #ccc",
-    width : "100px",
     borderRadius: "5px",
     cursor: "pointer",
   },
-  okButton: {
+  declineButton: {
     padding: "10px 20px",
     backgroundColor: "#FF6347",
-    width : "100px",
     color: "#fff",
     border: "none",
     borderRadius: "5px",
@@ -112,4 +104,4 @@ const styles = {
   },
 };
 
-export default CancelIncident;
+export default AssignIncident;

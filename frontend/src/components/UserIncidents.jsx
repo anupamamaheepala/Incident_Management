@@ -12,6 +12,46 @@ const [isCancelOpen, setIsCanecelOpen] = useState(false);
 const openCancelModal = () => setIsCanecelOpen(true);
 const closeCancelModal = () => setIsCanecelOpen(false);
 
+const dataSource = [
+    {
+      key: "1",
+      customerID: "CUST001",
+      customeName: "John Doe",
+      nic: "991234567V",
+      connectionNumber: "0771234567",
+      incidentType: "Billing Issue",
+      status: "Pending",
+    },
+    {
+      key: "2",
+      customerID: "CUST002",
+      customeName: "Jane Smith",
+      nic: "982345678V",
+      connectionNumber: "0772345678",
+      incidentType: "Service Interruption",
+      status: "Pending",
+    },
+    {
+      key: "3",
+      customerID: "CUST003",
+      customeName: "Michael Lee",
+      nic: "973456789V",
+      connectionNumber: "0773456789",
+      incidentType: "SIM Issue",
+      status: "Completed",
+    },
+    {
+      key: "4",
+      customerID: "CUST004",
+      customeName: "Sarah Johnson",
+      nic: "964567890V",
+      connectionNumber: "0774567890",
+      incidentType: "Device Issue",
+      status: "Declined",
+    },
+  ];
+
+
 const columns = [
     {
         title: "Incident ID",
@@ -46,7 +86,7 @@ const columns = [
         dataIndex: "status",
         render: (status) => {
             let color = "green";
-            if (status === "Cancelled") {
+            if (status === "Declined") {
                 color = "red";
             } else if (status === "Pending") {
                 color = "orange";
@@ -72,7 +112,7 @@ const columns = [
                             
                         >
                             <CancelIncident isOpen = {isCancelOpen} onClose= {closeCancelModal} />
-                            <Icon icon="icon-park-outline:correct" />
+                            
                         </button>
                      
                     </>
@@ -109,8 +149,8 @@ const columns = [
                     <div className="table-container">
                         <Table
                             columns={columns}
-                            // dataSource={"incidentList"}
-                            // pagination={"pagination"}
+                            dataSource={dataSource}
+                            pagination={{ pageSize:5}}
                             // onChange={"handleTableChange"}
                         />
                     </div>

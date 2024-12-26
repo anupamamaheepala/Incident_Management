@@ -10,15 +10,15 @@ const DeclineIncident = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
   const handleDecline = () => {
-    alert("Incident canceled!");
+    alert("Incident Declined!");
     closeModal();
   };
 
   return (
     <div>
       {/* Button to trigger the modal */}
-      <button onClick={openModal} style={styles.button}>
-        Cancel Incident
+      <button onClick={openModal} style={styles.actionButton}>
+        Decline
       </button>
 
       {/* Modal */}
@@ -31,22 +31,25 @@ const DeclineIncident = () => {
           },
           content: {
             maxWidth: "400px",
+            height: "250px",
             margin: "auto",
             padding: "20px",
-            borderRadius: "8px",
-            border: "none",
+            borderRadius: "12px",
+            border: "1px solid #ddd",
+            boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
           },
         }}
       >
         <div style={styles.modalContent}>
-          <div style={styles.icon}>
+          <div style={styles.iconWrapper}>
             <span style={styles.alertIcon}>⚠️</span>
           </div>
-          <h2 style={styles.header}>Cancel Incident</h2>
-          <p style={styles.text}>
-            Are you sure you want to cancel this Incident? This action cannot be undone.
+          <h2 style={styles.header}>Decline Incident</h2>
+          <p style={styles.description}>
+            Are you sure you want to Decline this Incident? This action cannot
+            be undone.
           </p>
-          <div style={styles.buttons}>
+          <div style={styles.buttonGroup}>
             <button onClick={closeModal} style={styles.cancelButton}>
               Cancel
             </button>
@@ -61,51 +64,60 @@ const DeclineIncident = () => {
 };
 
 const styles = {
-  button: {
+  actionButton: {
     padding: "10px 20px",
-    backgroundColor: "#4da8da",
+    backgroundColor: "red",
     color: "#fff",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "6px",
     cursor: "pointer",
+    fontSize: "16px",
   },
   modalContent: {
     textAlign: "center",
   },
-  icon: {
-    marginBottom: "20px",
+  iconWrapper: {
+    marginBottom: "15px",
   },
   alertIcon: {
-    fontSize: "30px",
-    color: "#FF6347",
+    fontSize: "40px",
+    color: "#FF4D4F",
   },
   header: {
-    fontSize: "20px",
+    fontSize: "18px",
+    fontWeight: "600",
     marginBottom: "10px",
+    color: "#333",
   },
-  text: {
+  description: {
+    fontSize: "14px",
+    color: "#666",
     marginBottom: "20px",
-    fontSize: "16px",
-    color: "#555",
   },
-  buttons: {
+  buttonGroup: {
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
+    gap: "10px",
   },
   cancelButton: {
-    padding: "10px 20px",
-    backgroundColor: "#f0f0f0",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
+    flex: "1",
+    padding: "10px 15px",
+    backgroundColor: "#f5f5f5",
+    border: "1px solid #d9d9d9",
+    borderRadius: "6px",
+    color: "#333",
     cursor: "pointer",
+    fontWeight: "500",
   },
   declineButton: {
-    padding: "10px 20px",
-    backgroundColor: "#FF6347",
-    color: "#fff",
+    flex: "1",
+    padding: "10px 15px",
+    backgroundColor: "#FF4D4F",
     border: "none",
-    borderRadius: "5px",
+    borderRadius: "6px",
+    color: "#fff",
     cursor: "pointer",
+    fontWeight: "500",
   },
 };
 

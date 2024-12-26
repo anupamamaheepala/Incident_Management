@@ -1,17 +1,54 @@
-import React ,{useState} from "react";
-import { Input, Tag, Table, Space } from "antd";
+import React, { useState } from "react";
+import { Table, Tag, Space } from "antd";
 import { Icon } from "@iconify/react";
-import profileImg from "../images/profileImg.png";
 import "../css/userProfile.css";
-import DeclineIncident from "../components/DeclineIncident";
-
-<img src={profileImg} alt="Logo" />;
-
+import AssignIncident from "../components/AssignIncident";
 
 function AdminReports() {
-  const [isDeclineOpen, setIsDeclineOpen] = useState(false);
-  const openDeclineModal = () => setIsDeclineOpen(true);
-  const closeDeclineModal = () => setIsDeclineOpen(false);
+  const [isAssignOpen, setIsAssignOpen] = useState(false);
+  const openAssignModal = () => setIsAssignOpen(true);
+  const closeAssignModal = () => setIsAssignOpen(false);
+
+  // Dummy data for the table
+  const dataSource = [
+    {
+      key: "1",
+      customerID: "CUST001",
+      customeName: "John Doe",
+      nic: "991234567V",
+      connectionNumber: "0771234567",
+      incidentType: "Billing Issue",
+      status: "Not Assigned",
+    },
+    {
+      key: "2",
+      customerID: "CUST002",
+      customeName: "Jane Smith",
+      nic: "982345678V",
+      connectionNumber: "0772345678",
+      incidentType: "Service Interruption",
+      status: "Assigned",
+    },
+    {
+      key: "3",
+      customerID: "CUST003",
+      customeName: "Michael Lee",
+      nic: "973456789V",
+      connectionNumber: "0773456789",
+      incidentType: "SIM Issue",
+      status: "Completed",
+    },
+    {
+      key: "4",
+      customerID: "CUST004",
+      customeName: "Sarah Johnson",
+      nic: "964567890V",
+      connectionNumber: "0774567890",
+      incidentType: "Device Issue",
+      status: "Declined",
+    },
+  ];
+
   const columns = [
     {
       title: "User ID",
@@ -33,7 +70,6 @@ function AdminReports() {
       dataIndex: "connectionNumber",
       key: "connectionNumber",
     },
-  
     {
       title: "Incident Type",
       dataIndex: "incidentType",
@@ -45,10 +81,12 @@ function AdminReports() {
       dataIndex: "status",
       render: (status) => {
         let color = "green";
-        if (status === "Cancelled") {
-          color = "red";
-        } else if (status === "Pending") {
+        if (status === "Not Assigned") {
           color = "orange";
+        } else if (status === "Declined") {
+          color = "red";
+        } else if (status === "Assigned") {
+          color = "blue";
         }
         return <Tag color={color}>{status}</Tag>;
       },
@@ -58,22 +96,18 @@ function AdminReports() {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          {record.status === "Pending" ? (
+          {record.status === "Not Assigned" ? (
+            // Enable button for "Not Assigned" status
             <>
-              <button
-                style={{
-                  fontSize: "20px",
-                  color: "#757171",
-                  border: "none",
-                  background: "transparent",
-                }}
-                 onClick= {openDeclineModal}
-              >
-                <Icon icon="icon-park-outline:correct" />
-              </button>
-            
+              <button onClick={openAssignModal}></button>
+              {/* Decline Modal */}
+              <AssignIncident
+                isOpen={isAssignOpen}
+                onClose={closeAssignModal}
+              />
             </>
           ) : (
+            // Disable button for other statuses
             <>
               <button
                 disabled
@@ -86,13 +120,13 @@ function AdminReports() {
               >
                 <Icon icon="icon-park-outline:correct" />
               </button>
-              
             </>
           )}
         </Space>
       ),
     },
   ];
+
   return (
     <div className="container">
       <div className="bg-image">
@@ -103,9 +137,8 @@ function AdminReports() {
           <div className="table-container">
             <Table
               columns={columns}
-              // dataSource={"incidentsList"}
-              // pagination={"pagination"}
-              // onChange={"handleTableChange"}
+              dataSource={dataSource} // Dummy data
+              pagination={{ pageSize: 5 }}
             />
           </div>
         </div>
