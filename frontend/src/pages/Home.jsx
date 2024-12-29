@@ -1,13 +1,18 @@
-import React from "react";
+import React ,{useState}from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import "../css/home.css";
 import IssueCard from "../components/IssueCard";
 import feedbackImg from "../images/feedbackImg.png";
 import homebackImg from "../images/homebackImg.png";
+import FeedbackModal from "../components/FeedbackModal";
 
 
 function Home() {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  const openFeedbackModal = () => setIsFeedbackOpen(true);
+  const closeFeedbackModal = () => setIsFeedbackOpen(false);
   const issuesData = [
     {
       title: "Billing and Payment Issues",
@@ -56,7 +61,7 @@ function Home() {
       image: require("../images/deviceissueImg.png"),
     },
   ];
-
+ 
   return (
     <div className="home-background">
       <Header />
@@ -104,8 +109,8 @@ function Home() {
               src={feedbackImg}
             />
           </div>
-          <button className="feedback-btn">Feedback</button>
-
+          <button className="feedback-btn" onClick={openFeedbackModal}>Feedback</button>
+          <FeedbackModal isOpen={isFeedbackOpen} onClose={closeFeedbackModal} />
         </div>
        
       </div>
