@@ -53,5 +53,6 @@ def init_user_routes(db):
             return jsonify({"message": "Invalid email or password"}), 401
 
         return jsonify({"message": "Signin successful", "user_id": str(user["_id"])}), 200
+    
 
     return auth_routes

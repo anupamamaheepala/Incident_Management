@@ -59,7 +59,7 @@ const UserProfile = () => {
         }}
       >
         {/* First Name and Last Name */}
-        <div style={{ display: "flex", marginTop: "8px" }}>
+        <div style={{ display: "flex", marginTop: "15px" }}>
           <div style={{ marginRight: "8px", flex: 1 }}>
             <div
               style={{
@@ -106,8 +106,8 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
-        {/* Username and NIC */}
-        <div style={{ display: "flex", marginTop: "8px" }}>
+        {/* Billing emial and contact*/}
+        <div style={{ display: "flex", marginTop: "20px" }}>
           <div style={{ marginRight: "8px", flex: 1 }}>
             <div
               style={{
@@ -121,7 +121,7 @@ const UserProfile = () => {
                   fontSize: "12px",
                 }}
               >
-                Username
+                Email
               </span>
               <Input
                 size="large"
@@ -131,6 +131,31 @@ const UserProfile = () => {
             </div>
           </div>
           <div style={{ flex: 1 }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <span
+                style={{
+                  marginBottom: "3px",
+                  fontSize: "12px",
+                }}
+              >
+                Phone Number
+              </span>
+              <Input
+                size="large"
+                style={{ width: "340px", marginRight: "40px" }}
+                value={""}
+              />
+            </div>
+          </div>
+        </div>
+        {/* Nic and Address */}
+        <div style={{ display: "flex", marginTop: "20px" }}>
+          <div style={{ marginRight: "8px", flex: 1 }}>
             <div
               style={{
                 display: "flex",
@@ -152,31 +177,6 @@ const UserProfile = () => {
               />
             </div>
           </div>
-        </div>
-        {/* Billing emial and contact*/}
-        <div style={{ display: "flex", marginTop: "8px" }}>
-          <div style={{ marginRight: "8px", flex: 1 }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <span
-                style={{
-                  marginBottom: "3px",
-                  fontSize: "12px",
-                }}
-              >
-                Billing Email
-              </span>
-              <Input
-                size="large"
-                style={{ width: "340px", marginRight: "40px" }}
-                value={""}
-              />
-            </div>
-          </div>
           <div style={{ flex: 1 }}>
             <div
               style={{
@@ -190,7 +190,7 @@ const UserProfile = () => {
                   fontSize: "12px",
                 }}
               >
-                Contact
+                Address
               </span>
               <Input
                 size="large"
@@ -200,8 +200,9 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+        
         {/* Province and Postal code */}
-        <div style={{ display: "flex", marginTop: "8px" }}>
+        <div style={{ display: "flex", marginTop: "20px" }}>
           <div style={{ marginRight: "8px", flex: 1 }}>
             <div
               style={{
@@ -238,53 +239,6 @@ const UserProfile = () => {
                 }}
               >
                 Postal Code
-              </span>
-              <Input
-                size="large"
-                style={{ width: "340px", marginRight: "40px" }}
-                value={""}
-              />
-            </div>
-          </div>
-        </div>
-        {/* Address and Status */}
-        <div style={{ display: "flex", marginTop: "8px" }}>
-          <div style={{ marginRight: "8px", flex: 1 }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <span
-                style={{
-                  marginBottom: "3px",
-                  fontSize: "12px",
-                }}
-              >
-                Address
-              </span>
-              <Input
-                size="large"
-                style={{ width: "340px", marginRight: "40px" }}
-                value={""}
-              />
-            </div>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <span
-                style={{
-                  marginBottom: "3px",
-                  fontSize: "12px",
-                }}
-              >
-                Status
               </span>
               <Input
                 size="large"

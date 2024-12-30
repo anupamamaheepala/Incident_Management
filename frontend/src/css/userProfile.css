@@ -112,6 +112,7 @@
   border-radius: 8px;
   border-color: #0056A2;
   background-color: #ffffff;
+
 }
 
 
@@ -122,8 +123,6 @@
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   background-color: #ffffff;
-  margin: auto;
-  
   
 }
 
@@ -154,3 +153,5 @@
 .ant-table-thead .ant-table-cell {
   background-color: #E6F7FF !important;
   }
+
+
