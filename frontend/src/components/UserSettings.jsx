@@ -1,108 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { InboxOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, message, Upload, Modal, Button } from "antd";
 import UserBasicInfo from "./UserBasicInfo";
 import ChangePw from "./ChangePw";
 
-const { Dragger } = Upload;
-
 function UserSettings() {
-  const [fileList, setFileList] = useState([]);
+  const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const customRequest = ({ file, onSuccess, onError }) => {
-    const formData = new FormData();
-    formData.append("image", file);
 
+  // Fetch user data on component mount
+  useEffect(() => {
+    const userId = localStorage.getItem("user_id");
+    if (userId) {
+      axios
+        .get(`http://localhost:5000/auth/get-user/${userId}`)
+        .then((response) => {
+          setUser(response.data.user);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          message.error("Failed to load user data.");
+        });
+    } else {
+      message.error("User not logged in. Redirecting...");
+      window.location.href = "/signin";
+    }
+  }, []);
+
+  const handleSaveChanges = (updatedData) => {
+    const userId = localStorage.getItem("user_id");
+    setLoading(true);
     axios
-      .post(
-        "https://api.imgbb.com/1/upload?key=700c61f2bf87cf203338efe206d7e66f",
-        formData
-      )
-      .then((response) => {
-        if (response.data.data) {
-          onSuccess();
-          message.success("Image uploaded successfully");
-          setFileList([
-            {
-              uid: "1",
-              name: "image.png",
-              status: "done",
-              url: response.data.data.url,
-            },
-          ]);
-          setLoading(false);
-        } else {
-          onError();
-          message.error("Failed to upload image");
-        }
+      .put(`http://localhost:5000/auth/update-user/${userId}`, updatedData)
+      .then(() => {
+        setLoading(false);
+        message.success("User details updated successfully!");
+        window.location.href = "/userProfile"; // Redirect to user profile
       })
       .catch((error) => {
-        onError();
-        message.error("Error uploading image: " + error.message);
+        setLoading(false);
+        console.error("Error updating user details:", error);
+        message.error("Failed to update user details.");
       });
   };
+
+  const handleDeleteAccount = async () => {
+    const userId = localStorage.getItem("user_id");
+    try {
+      await axios.delete(`http://localhost:5000/auth/delete-account/${userId}`); // Removed 'response'
+      message.success("Account deleted successfully.");
+      localStorage.removeItem("user_id");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      message.error("Error deleting account.");
+    }
+  };  
+  
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  // Function to handle the OK button click
   const handleOk = () => {
     setIsModalVisible(false);
     handleDeleteAccount();
   };
 
-  // Function to handle the Cancel button click
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  const props = {
-    name: "file",
-    multiple: true,
-    onChange(info) {
-      const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-    onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
-    },
-  };
-
-  const handleDeleteAccount = async () => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    const userID = user.userID;
-
-    try {
-      const response = await axios.post("/api/users/delete-account", {
-        userId: userID,
-      });
-      console.log(response.data);
-      message.success("Account deleted successfully");
-      localStorage.removeItem("currentUser");
-      window.location.href = "/login";
-    } catch (error) {
-      console.error("Error deleting account:", error);
-      message.error("Error deleting account");
-    }
-  };
-
-  const handleConfirmDeleteAccount = () => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to deactivate your account?"
-    );
-    if (isConfirmed) {
-      handleDeleteAccount();
-    }
   };
 
   return (
@@ -110,12 +77,12 @@ function UserSettings() {
       <div className="genral-setting">
         <div className="Basic-info">
           <div className="setting-header">
-            <h3 style={{marginBottom:"20px"}}>Basic information</h3>
-            <p style={{marginBottom:"30px" , color:"#637381"}}>
+            <h3 style={{ marginBottom: "20px" }}>Basic information</h3>
+            <p style={{ marginBottom: "30px", color: "#637381" }}>
               Update some personal information. Your address will never be
-              publicly available..
+              publicly available.
             </p>
-            <UserBasicInfo />
+            <UserBasicInfo user={user} onSave={handleSaveChanges} />
           </div>
         </div>
       </div>
@@ -124,8 +91,8 @@ function UserSettings() {
         <div className="setting-header">
           <h4>Change Password</h4>
           <p>
-            Update your password. We recommend you use a strong password that
-            you aren't using elsewhere.
+            Update your password. We recommend using a strong password that you
+            aren’t using elsewhere.
           </p>
         </div>
         <div className="change-password-form">
@@ -141,6 +108,20 @@ function UserSettings() {
             <li>At least one number</li>
           </ul>
         </div>
+      </div>
+
+      <div className="delete-account-section">
+        <Button type="primary" danger onClick={showModal}>
+          Delete Account
+        </Button>
+        <Modal
+          title="Confirm Account Deletion"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+          <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+        </Modal>
       </div>
     </div>
   );

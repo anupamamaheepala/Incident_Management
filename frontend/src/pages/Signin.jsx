@@ -32,7 +32,8 @@ function Signin() {
         email: formData.email,
         password: formData.password,
       });
-      
+      const { user_id } = response.data;
+      localStorage.setItem("user_id", user_id);
       Swal.fire({
         position: "top",
         icon: "success",

@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.security import generate_password_hash
 from models.user import User
+from bson.objectid import ObjectId
+
 
 auth_routes = Blueprint("auth_routes", __name__)
 
@@ -54,5 +56,49 @@ def init_user_routes(db):
 
         return jsonify({"message": "Signin successful", "user_id": str(user["_id"])}), 200
     
+    
+    @auth_routes.route("/get-user/<user_id>", methods=["GET"])
+    def get_user(user_id):
+        try:
+            # Find the user by ID
+            user = user_model.collection.find_one({"_id": ObjectId(user_id)})
+            if not user:
+                return jsonify({"message": "User not found"}), 404
+            
+            # Convert ObjectId to string for JSON serialization
+            user["_id"] = str(user["_id"])
+            return jsonify({"user": user}), 200
+        except Exception as e:
+            print(f"Error fetching user: {e}")
+            return jsonify({"message": "Internal server error"}), 500
+
+    @auth_routes.route("/update-user/<user_id>", methods=["PUT"])
+    def update_user(user_id):
+        data = request.json
+        update_fields = {key: value for key, value in data.items() if value}
+        result = user_model.collection.update_one({"_id": ObjectId(user_id)}, {"$set": update_fields})
+        if result.modified_count == 0:
+            return jsonify({"message": "No changes made"}), 400
+        return jsonify({"message": "User updated successfully"}), 200
+
+
+    @auth_routes.route("/delete-account/<user_id>", methods=["DELETE"])
+    def delete_account(user_id):
+        try:
+            # Check if user ID is valid
+            if not ObjectId.is_valid(user_id):
+                return jsonify({"message": "Invalid user ID"}), 400
+
+            # Delete user from the database
+            result = user_model.collection.delete_one({"_id": ObjectId(user_id)})
+
+            if result.deleted_count == 0:
+                return jsonify({"message": "User not found"}), 404
+
+            return jsonify({"message": "Account deleted successfully"}), 200
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+            return jsonify({"message": "Internal server error"}), 500
+
 
     return auth_routes
