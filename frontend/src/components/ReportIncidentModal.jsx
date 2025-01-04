@@ -28,16 +28,7 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
         </button>
       </div>
       <form className="report-form">
-        <div className="form-row">
-          <label>Customer ID</label>
-          <input
-            className="form-input"
-            type="text"
-            name="customerId"
-            value="1"
-            readOnly
-          />
-        </div>
+        
         <div className="form-row">
           <label>Name</label>
           <input
@@ -46,6 +37,15 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
             name="name"
             placeholder="eg:-hasi"
             
+          />
+        </div>
+        <div className="form-row">
+          <label>Email</label>
+          <input
+            className="form-input"
+            type="text"
+            name="email"
+            readOnly
           />
         </div>
         <div className="form-row">
