@@ -6,9 +6,11 @@ import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import { useAuth } from "../context/Context";
 
 function Signin() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -33,7 +35,7 @@ function Signin() {
         password: formData.password,
       });
       const { user_id } = response.data;
-      localStorage.setItem("user_id", user_id);
+      login(user_id);
       Swal.fire({
         position: "top",
         icon: "success",
@@ -41,7 +43,7 @@ function Signin() {
         title: response.data.message,
         timer: 1500
       });
-      navigate("/userProfile");
+      navigate("/");
       // Handle successful login (e.g., store token or redirect)
     } catch (error) {
       // Show error message

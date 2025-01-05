@@ -1,18 +1,38 @@
 import React ,{useState}from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import UserProfileHeader from "../components/UserProfileHeader";
 import "../css/home.css";
 import IssueCard from "../components/IssueCard";
 import feedbackImg from "../images/feedbackImg.png";
 import homebackImg from "../images/homebackImg.png";
 import FeedbackModal from "../components/FeedbackModal";
+import Swal from "sweetalert2";
+import { useAuth } from "../context/Context";
 
 
 function Home() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-
+  const { isLoggedIn } = useAuth();
   const openFeedbackModal = () => setIsFeedbackOpen(true);
   const closeFeedbackModal = () => setIsFeedbackOpen(false);
+
+  const handleProtectedAction = () => {
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: "info",
+        title: "You should sign in before continuing",
+        showConfirmButton: true,
+      });
+    } else {
+      Swal.fire({
+        icon: "success",
+        title: "Action allowed!",
+        timer: 1500,
+      });
+    }
+  };
+
   const issuesData = [
     {
       title: "Billing and Payment Issues",
@@ -64,7 +84,7 @@ function Home() {
  
   return (
     <div className="home-background">
-      <Header />
+      {isLoggedIn ? <UserProfileHeader /> : <Header />}
       <div className="app-container">
         <div>
           <div className="home-container">
@@ -84,6 +104,7 @@ function Home() {
                 issues={item.issues}
                 image={item.image}
                 buttonText="Report"
+                onReportClick={handleProtectedAction}
               />
             ))}
           </div>

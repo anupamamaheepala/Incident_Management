@@ -101,4 +101,11 @@ def init_user_routes(db):
             return jsonify({"message": "Internal server error"}), 500
 
 
+    # @auth_routes.route('/auth/validate/<user_id>', methods=['GET'])
+    # def validate_user(user_id):
+    #     user = db.users.find_one({"_id": ObjectId(user_id)})
+    #     if user:
+    #         return jsonify({"valid": True}), 200
+    #     return jsonify({"valid": False}), 200
+    
     return auth_routes

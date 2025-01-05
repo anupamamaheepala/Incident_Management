@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import { Menu, ConfigProvider, Dropdown, Space, Avatar } from "antd";
+import { useAuth } from "../context/Context";
 
 function getItem(label, key, icon, children, type) {
     return {
@@ -30,14 +31,19 @@ const rootSubmenuKeys = [];
 function UserSideMenu() {
     const location = useLocation();
     const navigate = useNavigate();
+    const { logout } = useAuth();
     const [openKeys, setOpenKeys] = useState(["/userProfile"]);
     const [selectedKeys, setSelectedKeys] = useState("/userProfile");
+    const handleLogout = () => {
+        logout();
+        navigate("/"); // Redirect to login page after logout
+      };
 
-    function logout() {
-        localStorage.removeItem("currentUser");
-        localStorage.removeItem('selectedCategory');
-        navigate("/login");
-    }
+    // function logout() {
+    //     localStorage.removeItem("currentUser");
+    //     localStorage.removeItem('selectedCategory');
+    //     navigate("/login");
+    // }
 
     useEffect(() => {
         const pathName = location.pathname;
@@ -86,7 +92,7 @@ function UserSideMenu() {
                 </ConfigProvider>
 
                 <div className="logout_btn_Container">
-                    <button className="user_logout_btn" onClick={logout}>
+                    <button className="user_logout_btn" onClick={handleLogout }>
                         <Icon
                             icon="ic:baseline-logout"
                             style={{ marginRight: "10px"}}

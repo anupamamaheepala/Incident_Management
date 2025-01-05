@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import "../css/IssueCard.css";
 import ReportIncidentModal from "./ReportIncidentModal"; // Import the modal component
 
-const IssueCard = ({ title, issues, buttonText, image }) => {
+const IssueCard = ({ title, issues, buttonText, image, onReportClick  }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    if (onReportClick) {
+      onReportClick();
+    }
+
+    if (localStorage.getItem("user_id")) {
+      setIsModalOpen(true);
+    }
+  };
+  
   const closeModal = () => setIsModalOpen(false);
 
   return (
