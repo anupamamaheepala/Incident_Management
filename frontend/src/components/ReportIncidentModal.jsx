@@ -1,10 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
-import "../css/reportIncident.css"; // Add a CSS file for custom styles
+import axios from "axios";
+import Swal from "sweetalert2";
+import "../css/reportIncident.css";
 
 Modal.setAppElement("#root");
 
 const ReportIncidentModal = ({ isOpen, onClose }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    connectionNumber: "",
+    nic: "",
+    incidentType: "Billing and payment",
+    description: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const userId = localStorage.getItem("user_id"); // Get the logged-in user ID
+      const response = await axios.post("http://localhost:5000/incidents/report", {
+        ...formData,
+        userId,
+        status: "Pending", // Default status
+      });
+
+      if (response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Incident Reported Successfully",
+          showConfirmButton: true,
+        });
+        onClose(); // Close the modal
+      }
+    } catch (error) {
+      console.error("Error reporting incident:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Report Incident",
+        text: error.response?.data?.message || "An error occurred",
+      });
+    }
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -27,7 +72,7 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
           ✖
         </button>
       </div>
-      <form className="report-form">
+      <form className="report-form" onSubmit={handleSubmit}>
         
         <div className="form-row">
           <label>Name</label>
@@ -35,17 +80,20 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
             className="form-input"
             type="text"
             name="name"
-            placeholder="eg:-hasi"
-            
+            value={formData.name}
+            onChange={handleChange}
+            required            
           />
         </div>
         <div className="form-row">
           <label>Email</label>
           <input
             className="form-input"
-            type="text"
+            type="email"
             name="email"
-            readOnly
+            value={formData.email}
+            onChange={handleChange}
+            required
           />
         </div>
         <div className="form-row">
@@ -54,8 +102,10 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
             className="form-input"
             type="text"
             name="connectionNumber"
-            placeholder="eg:-0712536984"
-            
+            placeholder="land line number"
+            value={formData.connectionNumber}
+            onChange={handleChange}
+            required            
           />
         </div>
         <div className="form-row">
@@ -64,13 +114,17 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
             className="form-input"
             type="text"
             name="nic"
-            placeholder="eg:-199875836v"
-            
+            value={formData.nic}
+            onChange={handleChange}
+            required
           />
         </div>
         <div className="form-row">
           <label>Incident Type</label>
-          <select className="form-input" name="incidentType" value="Billing and payment">
+          <select className="form-input"
+            name="incidentType"
+            value={formData.incidentType}
+            onChange={handleChange}>
             <option value="Billing and payment">Billing and Payment</option>
             <option value="Service interruption">Service Interruption</option>
             <option value="SIM issue">SIM Issue</option>
@@ -84,7 +138,10 @@ const ReportIncidentModal = ({ isOpen, onClose }) => {
           <textarea
             className="form-input"
             name="description"
-            placeholder="Enter a brief description of the incident" 
+            placeholder="Enter a brief description of the incident"
+            value={formData.description}
+            onChange={handleChange}
+            required
           />
         </div>
         <button className="submit-button" type="submit">
