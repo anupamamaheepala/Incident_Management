@@ -2,7 +2,7 @@ import React from 'react'
 import  AdminSideMenu from '../components/AdminSideMenu'
 import AdminRoutes  from '../components/AdminRoutes'
 
-import UserProfileHeader from '../components/UserProfileHeader'
+import AdminHeader from '../components/AdminHeader'
 import "../css/userProfile.css";
 import "../css/userSettings.css";
 import "../css/userSideMenu.css";
@@ -13,7 +13,7 @@ function AdminPage() {
 
     
     <div className="Emp_DashboardContainer"style={{overflowX : "hidden"}}>
-    <UserProfileHeader/>
+    <AdminHeader/>
     <div className="Emp_DashboardContainer" >
       <div className="Emp_SideMenuAndPageContent">
         <AdminSideMenu />

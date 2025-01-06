@@ -102,3 +102,29 @@
   position: relative;
   right: 80px;
 }
+
+
+.admin-nav-menu ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.admin-nav-menu ul li {
+  margin: 0 15px;
+}
+
+.admin-nav-menu ul li a {
+  color: rgb(0, 86, 162);
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.admin-nav-menu ul li a:hover {
+  text-decoration: underline;
+}
+
+.admin-nav-menu{
+  margin-right: 550px;
+}
