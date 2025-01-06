@@ -48,4 +48,19 @@ def init_incident_routes(db):
         except Exception as e:
             return jsonify({"message": "Error retrieving incidents", "error": str(e)}), 500
 
+
+    @incident_routes.route("/admin/incidents", methods=["GET"])
+    def get_all_incidents():
+        print("Fetching all incidents...")  # Debugging print statement
+        try:
+            all_incidents = list(incidents.find())
+            print("Incidents found:", all_incidents)  # Debugging print statement
+            for incident in all_incidents:
+                incident["_id"] = str(incident["_id"])  # Convert ObjectId to string
+                incident["userId"] = str(incident["userId"])
+            return jsonify(all_incidents), 200
+        except Exception as e:
+            print("Error:", str(e))  # Debugging print statement
+            return jsonify({"message": "Error retrieving incidents", "error": str(e)}), 500
+
     return incident_routes
