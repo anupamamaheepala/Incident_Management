@@ -73,6 +73,12 @@ function AdminReports() {
       ),
     },
     {
+      title: "Date and Time",
+      dataIndex: "dateTime",
+      key: "dateTime",
+      render: (text) => new Date(text).toLocaleString(), // Format the date and time
+    },
+    {
       title: "Status",
       key: "status",
       dataIndex: "status",

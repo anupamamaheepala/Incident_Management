@@ -55,7 +55,13 @@ const UserIncidents = () => {
             {text.length > 30 ? `${text.substring(0, 30)}...` : text}
           </Tooltip>
         ),
-      },
+    },
+    {
+      title: "Date and Time",
+      dataIndex: "dateTime",
+      key: "dateTime",
+      render: (text) => new Date(text).toLocaleString(), // Format the date and time
+    },
     {
       title: "Status",
       key: "status",
