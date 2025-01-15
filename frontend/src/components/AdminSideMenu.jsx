@@ -16,12 +16,13 @@ function getItem(label, key, icon, children, type) {
 const items = [
     getItem("Dashboard", "/dashboard", <Icon icon="iconamoon:profile" />),
     getItem("Reports", "/dashboard/reports", <Icon icon="prime:book" />),
+    getItem("Teams", "/dashboard/teams", <Icon icon="fluent:people-team-24-regular"/>),
     getItem(
         "Feedbacks",
         "/dashboard/feedbacks",
         <Icon icon="fluent:person-feedback-20-regular" />
     ),
-    getItem("Teams", "/dashboard/teams", <Icon icon="fluent:people-team-24-regular"/>),
+    
     
 ];
 
