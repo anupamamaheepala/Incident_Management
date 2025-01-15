@@ -1,0 +1,14 @@
+.admin-teams-container {
+    width: 100%; /* Ensure full width */
+    max-width: 1000px; /* Add a maximum width */
+    margin: 0 auto; /* Center the container */
+    
+  }
+  
+  .admin-teams-container .bg-image {
+    width: 100%;
+    max-width: none; /* Ensure bg-image stretches fully */
+    height: auto;
+  }
+  
+  
