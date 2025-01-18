@@ -11,4 +11,34 @@
     height: auto;
   }
   
-  
+  .admin-cards-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensure cards wrap on smaller screens */
+    gap: 16px; /* Add spacing between cards */
+    justify-content: center; /* Center align the cards */
+    padding: 30px;
+}
+
+.admin-cards-container .ant-card {
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 8px #0056a2; /* Light shadow for cards */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    padding: 10px;
+}
+
+.admin-cards-container .ant-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    transform: translateY(-5px); /* Slight lift effect */
+}
+
+.admin-cards-container .ant-card .ant-card-body {
+    text-align: center; /* Center align the content inside cards */
+    font-size: 14px; /* Adjust text size */
+    color: #333; /* Neutral text color */
+}
+
+.admin-cards-container .ant-card .ant-card-head {
+    font-size: 16px; /* Larger font for titles */
+    color: #000000; /* Theme color for titles */
+    font-weight: bold;
+}
