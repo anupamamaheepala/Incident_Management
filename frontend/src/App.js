@@ -31,6 +31,7 @@ import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 import UserProfile from './pages/UserProfile';
 import AdminPage from './pages/AdminPage';
+import AdminIncidentDetails from "./components/AdminIncidentDetails";
 
 function App() {
   
@@ -43,6 +44,7 @@ function App() {
           <Route path="/Signin" element={<Signin />} />
           <Route path="/userProfile/*" element={<UserProfile />} />
           <Route path="/dashboard/*" element={<AdminPage />} />
+          <Route path="/admin/incidents/:incidentType" element={<AdminIncidentDetails />} />
         </Routes>
       </Router>
     </AuthProvider>

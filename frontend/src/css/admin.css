@@ -42,3 +42,18 @@
     color: #000000; /* Theme color for titles */
     font-weight: bold;
 }
+
+.admin-incident-details-container {
+    padding: 20px;
+    background-color: #f3f3ff;
+    min-height: 100vh;
+}
+
+.admin-incident-details-container h2 {
+    margin-bottom: 20px;
+    color: #0056A2;
+}
+
+.admin-incident-details-container .ant-btn {
+    margin: 5px;
+}
