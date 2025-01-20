@@ -102,5 +102,48 @@ def init_incident_routes(db):
             return jsonify({"message": "No changes made"}), 200
         except Exception as e:
             return jsonify({"message": "Error updating status", "error": str(e)}), 500
+        
+    @incident_routes.route("/status-counts", methods=["GET"])
+    def get_status_counts():
+        """
+        Returns the count of incidents grouped by type and status.
+        """
+        try:
+            pipeline = [
+                {
+                    "$group": {
+                        "_id": {"type": "$incidentType", "status": "$status"},
+                        "count": {"$sum": 1}
+                    }
+                },
+                {
+                    "$group": {
+                        "_id": "$_id.type",
+                        "statuses": {
+                            "$push": {
+                                "status": "$_id.status",
+                                "count": "$count"
+                            }
+                        }
+                    }
+                }
+            ]
+            results = list(incidents.aggregate(pipeline))
+            print("Pipeline results:", results)  # Debugging print
+
+            # Format the results
+            status_counts = {}
+            for result in results:
+                type_name = result["_id"]
+                counts = {item["status"]: item["count"] for item in result["statuses"]}
+                status_counts[type_name] = counts
+
+            print("Formatted counts:", status_counts)  # Debugging print
+            return jsonify(status_counts), 200
+        except Exception as e:
+            print("Error during aggregation:", str(e))  # Debugging print
+            return jsonify({"message": "Error calculating status counts", "error": str(e)}), 500
+
+
 
     return incident_routes
