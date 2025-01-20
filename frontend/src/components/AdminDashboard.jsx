@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Card, Statistic } from "antd";
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
+import axios from "axios";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    allCustomers: 0,
+    totalIncidents: 0,
+    completedIncidents: 0,
+    unassignedIncidents: 0,
+  });
+
   const pieData = [
     { name: "Billing/Payment", value: 10 },
     { name: "Service Interruptions", value: 30 },
@@ -11,6 +19,7 @@ const AdminDashboard = () => {
     { name: "Customer Portal app Issues", value: 20 },
     { name: "Device Related Issues", value: 25 },
   ];
+
   const lineData = [
     { day: "01", reports: 10 },
     { day: "02", reports: 20 },
@@ -22,13 +31,26 @@ const AdminDashboard = () => {
   ];
 
   const COLORS = [
-    "#FF6F61", 
-    "#FFA500", 
+    "#FF6F61",
+    "#FFA500",
     "#FFD700",
     "#00FF7F",
-    "#00BFFF", 
+    "#00BFFF",
     "#DA70D6",
   ];
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/incidents/dashboard-stats");
+        setStats(response.data);
+      } catch (error) {
+        console.error("Error fetching dashboard stats:", error);
+      }
+    };
+
+    fetchDashboardStats();
+  }, []);
 
   return (
     <div className="container">
@@ -36,23 +58,23 @@ const AdminDashboard = () => {
         <Row gutter={[16, 16]}>
           {/* Statistic Boxes */}
           <Col span={6}>
-            <Card style={{ backgroundColor: "#D7ECF6",  height :"150px"}}>
-              <Statistic title="All Customers" value={240} />
+            <Card style={{ backgroundColor: "#D7ECF6", height: "150px" }}>
+              <Statistic title="All Customers" value={stats.allCustomers} />
             </Card>
           </Col>
           <Col span={6}>
-            <Card style={{ backgroundColor: "#C2D6F9",height :"150px" }}>
-              <Statistic title="Total Incidents" value={300} />
+            <Card style={{ backgroundColor: "#C2D6F9", height: "150px" }}>
+              <Statistic title="Total Incidents" value={stats.totalIncidents} />
             </Card>
           </Col>
           <Col span={6}>
-            <Card style={{ backgroundColor: "#C7FFC2",height :"150px" }}>
-              <Statistic title="Completed Incidents" value={250} />
+            <Card style={{ backgroundColor: "#C7FFC2", height: "150px" }}>
+              <Statistic title="Completed Incidents" value={stats.completedIncidents} />
             </Card>
           </Col>
           <Col span={6}>
-            <Card   style={{ backgroundColor: "#B7D1B0" ,height :"150px"}} >
-              <Statistic title="Unassigned Incidents" value={50} />
+            <Card style={{ backgroundColor: "#B7D1B0", height: "150px" }}>
+              <Statistic title="Pending Incidents" value={stats.unassignedIncidents} />
             </Card>
           </Col>
         </Row>
@@ -61,8 +83,8 @@ const AdminDashboard = () => {
           {/* Doughnut Chart with Legends */}
           <Col span={12}>
             <Card title="Incidents">
-              <p style={{marginBottom :"20px" , color :"#71717A"}}>Monthly status of the incidents</p>
-              <div style={{ display: "flex", alignItems: "center",  marginBottom :"10px"}}>
+              <p style={{ marginBottom: "20px", color: "#71717A" }}>Monthly status of the incidents</p>
+              <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
                 <PieChart width={250} height={250}>
                   <Pie
                     data={pieData}
@@ -110,7 +132,7 @@ const AdminDashboard = () => {
           {/* Placeholder for Line Chart */}
           <Col span={12}>
             <Card title="All Reports (Last 7 Days)">
-            <LineChart
+              <LineChart
                 width={400}
                 height={300}
                 data={lineData}

@@ -145,5 +145,31 @@ def init_incident_routes(db):
             return jsonify({"message": "Error calculating status counts", "error": str(e)}), 500
 
 
+    @incident_routes.route("/dashboard-stats", methods=["GET"])
+    def get_dashboard_stats():
+        """
+        Returns the statistics for Admin Dashboard:
+        - All Customers
+        - Total Incidents
+        - Completed Incidents
+        - Unassigned Incidents (Pending)
+        """
+        try:
+            all_customers = len(set(incidents.distinct("nic")))  # Unique NICs for customers
+            total_incidents = incidents.count_documents({})
+            completed_incidents = incidents.count_documents({"status": "Completed"})
+            unassigned_incidents = incidents.count_documents({"status": "Pending"})
+
+            stats = {
+                "allCustomers": all_customers,
+                "totalIncidents": total_incidents,
+                "completedIncidents": completed_incidents,
+                "unassignedIncidents": unassigned_incidents,
+            }
+
+            return jsonify(stats), 200
+        except Exception as e:
+            return jsonify({"message": "Error fetching dashboard stats", "error": str(e)}), 500
+
 
     return incident_routes
