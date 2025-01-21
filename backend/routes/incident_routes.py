@@ -172,4 +172,31 @@ def init_incident_routes(db):
             return jsonify({"message": "Error fetching dashboard stats", "error": str(e)}), 500
 
 
+    @incident_routes.route("/incident-type-counts", methods=["GET"])
+    def get_incident_type_counts():
+        """
+        Returns the count of incidents grouped by type.
+        """
+        try:
+            pipeline = [
+                {
+                    "$group": {
+                        "_id": "$incidentType",
+                        "count": {"$sum": 1}
+                    }
+                },
+                {
+                    "$sort": {"count": -1}  # Sort by count in descending order
+                }
+            ]
+            results = list(incidents.aggregate(pipeline))
+
+            # Format the results
+            type_counts = [{"name": result["_id"], "value": result["count"]} for result in results]
+
+            return jsonify(type_counts), 200
+        except Exception as e:
+            return jsonify({"message": "Error fetching incident type counts", "error": str(e)}), 500
+
+
     return incident_routes
