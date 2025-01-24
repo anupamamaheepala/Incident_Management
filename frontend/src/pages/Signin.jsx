@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "../css/signin.css";
+import { GoogleLogin } from "react-google-login";
 import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -53,6 +54,39 @@ function Signin() {
         text: error.response?.data?.message || "Invalid email or password",
       });
     }
+  };
+
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const { tokenId } = response;
+      await axios.post("http://localhost:5000/auth/google", { token: tokenId });
+
+      Swal.fire({
+        position: "top",
+        icon: "success",
+        title: "Login Successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      navigate("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Google Login Failed",
+        text: error.response?.data?.message || "Something went wrong.",
+      });
+    }
+  };
+
+  // Handle Google login failure
+  const handleGoogleFailure = (error) => {
+    console.error("Google Login Failed:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Google Login Failed",
+      text: "Please try again later.",
+    });
   };
 
   return (
@@ -116,12 +150,19 @@ function Signin() {
           </div>
 
           <div className="signin-social-buttons">
-            <button type="button" className="signin-btn-facebook">
+            {/* <button type="button" className="signin-btn-facebook">
               Facebook
             </button>
             <button type="button" className="signin-btn-google">
               Google
-            </button>
+            </button> */}
+            <GoogleLogin
+              clientId="YOUR_GOOGLE_CLIENT_ID"
+              buttonText="Login with Google"
+              onSuccess={handleGoogleSuccess}
+              onFailure={handleGoogleFailure}
+              cookiePolicy={"single_host_origin"}
+            />
           </div>
         </form>
       </div>

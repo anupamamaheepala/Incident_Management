@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GoogleLogin } from "react-google-login";
 import { Divider, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -87,6 +88,40 @@ const Signup = () => {
         text: error.response?.data?.message || "Signup failed",
       });
     }
+  };
+
+  // Handle Google signup success
+  const handleGoogleSuccess = async (response) => {
+    try {
+      const { tokenId } = response;
+      await axios.post("http://localhost:5000/auth/google", { token: tokenId });
+
+      Swal.fire({
+        position: "top",
+        icon: "success",
+        title: "Signup Successful",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      navigate("/");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Google Signup Failed",
+        text: error.response?.data?.message || "Something went wrong.",
+      });
+    }
+  };
+
+  // Handle Google signup failure
+  const handleGoogleFailure = (error) => {
+    console.error("Google Signup Failed:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Google Signup Failed",
+      text: "Please try again later.",
+    });
   };
 
   return (
@@ -208,12 +243,19 @@ const Signup = () => {
            </div>
           
            <div className="signup-social-buttons-con">
-             <button type="button" className="signup-btn-facebook-login">
+             {/* <button type="button" className="signup-btn-facebook-login">
                Facebook Account
              </button>
              <button type="button" className="signup-btn-google-login">
                Google Account
-             </button>
+             </button> */}
+             <GoogleLogin
+              clientId="YOUR_GOOGLE_CLIENT_ID"
+              buttonText="Sign Up with Google"
+              onSuccess={handleGoogleSuccess}
+              onFailure={handleGoogleFailure}
+              cookiePolicy={"single_host_origin"}
+            />
            </div>
         </form>
       </div>

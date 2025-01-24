@@ -148,7 +148,7 @@ body {
 
 .signup-social-buttons-con{
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
 }
 
