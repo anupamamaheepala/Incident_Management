@@ -157,7 +157,7 @@ function Signin() {
               Google
             </button> */}
             <GoogleLogin
-              clientId="YOUR_GOOGLE_CLIENT_ID"
+              clientId="6623246348-05rh90iudbrog6a75f6us0hkom6bu2rt.apps.googleusercontent.com"
               buttonText="Login with Google"
               onSuccess={handleGoogleSuccess}
               onFailure={handleGoogleFailure}
