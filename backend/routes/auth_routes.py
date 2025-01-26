@@ -71,45 +71,6 @@ def init_user_routes(db):
         return jsonify({"message": "Signin successful", "user_id": str(user["_id"])}), 200
     
 
-    # @auth_routes.route("/auth/google")
-    # def google_login():
-    #     # Redirect to Google's OAuth 2.0 login
-    #     redirect_uri = url_for("auth_routes.google_callback", _external=True)
-    #     return oauth.google.authorize_redirect(redirect_uri)
-    
-    # @auth_routes.route("/auth/google/callback")
-    # def google_callback():
-    #     # Handle Google OAuth callback
-    #     try:
-    #         token = oauth.google.authorize_access_token()
-    #         user_info = oauth.google.get("userinfo").json()
-
-    #         email = user_info["email"]
-    #         first_name = user_info.get("given_name", "")
-    #         last_name = user_info.get("family_name", "")
-
-    #         # Check if user exists in the database
-    #         user = user_model.find_user_by_email(email)
-    #         if not user:
-    #             # If the user doesn't exist, create a new account
-    #             user_id = user_model.create_user(
-    #                 first_name=first_name,
-    #                 last_name=last_name,
-    #                 email=email,
-    #                 phone="",  # Google does not provide phone info
-    #                 password="",  # Password is not required for Google accounts
-    #             )
-    #             user = user_model.collection.find_one({"_id": ObjectId(user_id)})
-
-    #         # Set user session (if using session-based auth)
-    #         session["user_id"] = str(user["_id"])
-
-    #         return jsonify({"message": "Google sign-in successful", "user_id": str(user["_id"])}), 200
-
-    #     except Exception as e:
-    #         print(f"Error during Google callback: {e}")
-    #         return jsonify({"message": "Google sign-in failed"}), 500
-
     @auth_routes.route("/auth/google", methods=["POST"])
     def google_auth():
         token = request.json.get("token")
