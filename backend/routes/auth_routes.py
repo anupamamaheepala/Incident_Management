@@ -74,36 +74,36 @@ def init_user_routes(db):
     @auth_routes.route("/auth/google", methods=["POST"])
     def google_auth():
         token = request.json.get("token")
-
         if not token:
             return jsonify({"message": "Token is required"}), 400
 
+        from google.oauth2 import id_token
+        from google.auth.transport.requests import Request
+
         try:
-            # Verify token with Google
-            user_info = oauth.google.parse_id_token(token)
+            idinfo = id_token.verify_oauth2_token(token, Request())
+            email = idinfo["email"]
+            first_name = idinfo.get("given_name", "")
+            last_name = idinfo.get("family_name", "")
 
-            email = user_info["email"]
-            first_name = user_info.get("given_name", "")
-            last_name = user_info.get("family_name", "")
-
-            # Check if user exists in the database
             user = user_model.find_user_by_email(email)
             if not user:
-                # If the user doesn't exist, create a new account
                 user_id = user_model.create_user(
                     first_name=first_name,
                     last_name=last_name,
                     email=email,
-                    phone="",  # Optional
-                    password="",  # Password not required for Google users
+                    phone="",
+                    password="",
                 )
                 user = user_model.collection.find_one({"_id": ObjectId(user_id)})
 
-            # Return user data or session token
             return jsonify({"message": "Google login successful", "user_id": str(user["_id"])}), 200
 
+        except ValueError as e:
+            print(f"Token verification failed: {e}")
+            return jsonify({"message": "Invalid token"}), 400
         except Exception as e:
-            print(f"Error during Google login: {e}")
+            print(f"Unexpected error: {e}")
             return jsonify({"message": "Google login failed"}), 500
 
     

@@ -7,7 +7,9 @@ from config import Config
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+
+# Enable CORS
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 # Configure MongoDB
 app.config.from_object(Config)
@@ -23,6 +25,15 @@ app.register_blueprint(incident_routes, url_prefix="/incidents")
 @app.route("/")
 def home():
     return {"message": "API is running"}, 200
+
+# Handle error responses for better debugging
+@app.errorhandler(404)
+def not_found_error(error):
+    return {"error": "Not found"}, 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return {"error": "Internal server error"}, 500
 
 if __name__ == "__main__":
     app.run(debug=True)

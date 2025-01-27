@@ -56,11 +56,12 @@ function Signin() {
     }
   };
 
+  
   const handleGoogleSuccess = async (response) => {
+    console.log("Google login response:", response);
+    const tokenId = response.tokenId;
     try {
-      const { tokenId } = response;
       await axios.post("http://localhost:5000/auth/google", { token: tokenId });
-
       Swal.fire({
         position: "top",
         icon: "success",
@@ -68,7 +69,6 @@ function Signin() {
         showConfirmButton: false,
         timer: 1500,
       });
-
       navigate("/");
     } catch (error) {
       Swal.fire({
@@ -79,13 +79,15 @@ function Signin() {
     }
   };
 
-  // Handle Google login failure
   const handleGoogleFailure = (error) => {
     console.error("Google Login Failed:", error);
     Swal.fire({
       icon: "error",
       title: "Google Login Failed",
-      text: "Please try again later.",
+      text:
+        error?.error === "popup_closed_by_user"
+          ? "You closed the login popup. Please try again."
+          : "Something went wrong. Please try again later.",
     });
   };
 
@@ -162,6 +164,7 @@ function Signin() {
               onSuccess={handleGoogleSuccess}
               onFailure={handleGoogleFailure}
               cookiePolicy={"single_host_origin"}
+              scope="openid email profile"
             />
           </div>
         </form>
