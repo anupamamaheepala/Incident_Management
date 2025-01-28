@@ -3,6 +3,7 @@ import { Row, Col, Card, Statistic } from "antd";
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from "recharts";
 import axios from "axios";
 
+
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
     allCustomers: 0,
@@ -13,15 +14,16 @@ const AdminDashboard = () => {
 
   const [pieData, setPieData] = useState([]);
 
-  const lineData = [
-    { day: "01", reports: 10 },
-    { day: "02", reports: 20 },
-    { day: "03", reports: 15 },
-    { day: "04", reports: 25 },
-    { day: "05", reports: 35 },
-    { day: "06", reports: 40 },
-    { day: "07", reports: 50 },
-  ];
+  // const lineData = [
+  //   { day: "01", reports: 10 },
+  //   { day: "02", reports: 20 },
+  //   { day: "03", reports: 15 },
+  //   { day: "04", reports: 25 },
+  //   { day: "05", reports: 35 },
+  //   { day: "06", reports: 40 },
+  //   { day: "07", reports: 50 },
+  // ];
+  const [lineData, setLineData] = useState([]);
 
   const COLORS = [
     "#FF6F61",
@@ -51,8 +53,33 @@ const AdminDashboard = () => {
       }
     };
 
+    // Fetch line chart data (incidents by date for the past 7 days)
+    const fetchLineData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/incidents/incidents-by-date");
+        const fetchedData = response.data;
+
+        const today = new Date();
+        const pastSevenDays = Array.from({ length: 7 }, (_, i) => {
+          const date = new Date(today);
+          date.setDate(today.getDate() - (6 - i));
+          const formattedDate = date.toISOString().split("T")[0];
+          return {
+            date: formattedDate,
+            count: fetchedData[formattedDate] || 0,
+          };
+        });
+
+        console.log("Line Data for Chart:", pastSevenDays); // Debugging lineData
+        setLineData(pastSevenDays);
+      } catch (error) {
+        console.error("Error fetching line chart data:", error);
+      }
+    };
+
     fetchDashboardStats();
     fetchPieData();
+    fetchLineData();
   }, []);
 
   return (
@@ -137,19 +164,19 @@ const AdminDashboard = () => {
           {/* Placeholder for Line Chart */}
           <Col span={12}>
             <Card title="All Reports (Last 7 Days)">
-              <LineChart
-                width={400}
-                height={300}
-                data={lineData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="reports" stroke="#8884d8" />
-              </LineChart>
+            <LineChart
+              width={400}
+              height={300}
+              data={lineData}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="count" stroke="#8884d8" />
+            </LineChart>
             </Card>
           </Col>
         </Row>

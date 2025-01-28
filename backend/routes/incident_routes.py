@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from bson.objectid import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def init_incident_routes(db):
     incident_routes = Blueprint("incidents", __name__)
@@ -197,6 +197,45 @@ def init_incident_routes(db):
             return jsonify(type_counts), 200
         except Exception as e:
             return jsonify({"message": "Error fetching incident type counts", "error": str(e)}), 500
+        
 
+    @incident_routes.route("/incidents-by-date", methods=["GET"])
+    def get_incidents_by_date():
+        """
+        Returns the count of incidents grouped by date for the past 7 days, including days with no incidents.
+        """
+        try:
+            today = datetime.now()
+            seven_days_ago = today - timedelta(days=6)
+
+            # MongoDB aggregation to group incidents by date
+            pipeline = [
+                {"$match": {"dateTime": {"$gte": seven_days_ago.isoformat()}}},  # Filter last 7 days
+                {
+                    "$group": {
+                        "_id": {"$dateToString": {"format": "%Y-%m-%d", "date": {"$dateFromString": {"dateString": "$dateTime"}}}},
+                        "count": {"$sum": 1},
+                    }
+                },
+                {"$sort": {"_id": 1}},  # Sort by date
+            ]
+
+            results = list(incidents.aggregate(pipeline))
+
+            # Prepare a dictionary with counts for each of the past 7 days
+            date_counts = {result["_id"]: result["count"] for result in results}
+
+            # Fill in missing dates with 0 counts
+            past_seven_days = [
+                (seven_days_ago + timedelta(days=i)).strftime("%Y-%m-%d")
+                for i in range(7)
+            ]
+            complete_data = {date: date_counts.get(date, 0) for date in past_seven_days}
+
+            return jsonify(complete_data), 200
+
+        except Exception as e:
+            print(f"Error fetching incidents by date: {e}")
+            return jsonify({"message": "Error fetching incidents by date", "error": str(e)}), 500
 
     return incident_routes
